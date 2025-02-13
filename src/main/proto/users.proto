@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "amt";
+
+package users;
+
+service UsersService {
+    // Unary sending to as a client to join the project with a name and get back a list of existing users (including itself)
+    rpc Join(UserName) returns (UsersList);
+    // Server-side streaming to broadcast users joining or leaving
+    rpc GetUsersEvents(UserSubscription) returns (stream UserChange);
+
+}
+
+message UserName {
+    string name = 1;
+}
+
+message UsersList {
+    repeated User users = 1;
+}
+
+message User {
+    uint32 id = 1;
+    string name = 2;
+}
+
+enum SessionAction {
+    ACTION_UNSPECIFIED = 0;
+    JOIN = 1;
+    LEAVE = 2;
+}
+
+message UserChange {
+    SessionAction action = 1;
+    uint32 userId = 2;
+    string name = 3;
+}
+
+message UserSubscription {
+    uint32 userId = 1;
+}

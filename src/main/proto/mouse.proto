@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "amt";
+
+package mouse;
+
+service MouseService {
+    // Server-side streaming to broadcast mouse positions to all clients
+    rpc GetMouseUpdates(MouseSubscription) returns (stream MousePosition);
+    // Unary sending to let clients send their mouse positions when they move
+    rpc SendMousePosition(MousePosition) returns (google.protobuf.Empty);
+}
+
+message MousePosition {
+    uint32 userId = 1;
+    uint32 x = 2;
+    uint32 y = 3;
+}
+
+message MouseSubscription {
+    uint32 userId = 1;
+}
